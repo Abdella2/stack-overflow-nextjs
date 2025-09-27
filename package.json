@@ -10,9 +10,11 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css}\""
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "next": "15.5.3",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
