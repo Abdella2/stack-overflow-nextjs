@@ -9,6 +9,7 @@ import {
 } from '@clerk/nextjs';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
+import { ThemeProvider } from '@/context/ThemeProvider';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -37,33 +38,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        elements: {
-          formButtonPrimary: 'primary-gradient',
-          footerActionLink: 'primary-text-gradient hover:text-primary-500'
-        }
-      }}>
-      <html lang="en">
-        <body
-          className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}>
-          <h1 className="h1-bold">This is a piece of text</h1>
-          <header className="flex h-16 items-center justify-end gap-4 p-4">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-[#6c47ff] px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}>
+        <ClerkProvider
+          appearance={{
+            elements: {
+              formButtonPrimary: 'primary-gradient',
+              footerActionLink: 'primary-text-gradient hover:text-primary-500'
+            }
+          }}>
+          <ThemeProvider>
+            <header className="flex h-16 items-center justify-end gap-4 p-4">
+              <SignedOut>
+                <SignInButton />
+                <SignUpButton>
+                  <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-[#6c47ff] px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </header>
+            {children}
+          </ThemeProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
