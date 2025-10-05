@@ -11,7 +11,7 @@ import { Button } from '../ui/button';
 const LeftSidebar = () => {
   const pathname = usePathname();
   return (
-    <section className="background-light900_dark200 light-border shadow-light-300 custom-scroll fixed top-0 left-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 max-sm:hidden lg:w-[266px] dark:shadow-none">
+    <section className="background-light900_dark200 light-border shadow-light-300 custom-scroll sticky top-0 left-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 max-sm:hidden lg:w-[266px] dark:shadow-none">
       <div className="flex flex-1 flex-col">
         {sidebarLinks.map((item) => {
           const isActive =
