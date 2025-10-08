@@ -7,89 +7,12 @@ import React from 'react';
 import HomeFilters from '@/components/home/HomeFilters';
 import NoResult from '@/components/shared/NoResult';
 import QuestionCard from '@/components/shared/cards/QuestionCard';
+import { getQuestions } from '@/lib/actions/question.action';
 
-const questions = [
-  {
-    _id: 'q1',
-    title: 'How to learn React in 2025 [Updated Guide]',
-    tags: [
-      { _id: 't1', name: 'react' },
-      { _id: 't2', name: 'javascript' }
-    ],
-    author: {
-      _id: 'u1',
-      name: 'John Doe',
-      picture: 'https://randomuser.me/api/portraits/men/1.jpg'
-    },
-    upVotes: 950,
-    views: 1200,
-    answers: [
-      {
-        _id: 'a1',
-        text: 'Start with the official docs and build small projects.'
-      },
-      {
-        _id: 'a2',
-        text: 'Try Next.js if you want to learn the ecosystem faster.'
-      }
-    ],
-    createdAt: new Date('2023-01-01T10:00:00Z')
-  },
-  {
-    _id: 'q2',
-    title: 'What is the best way to manage state in a React application?',
-    tags: [
-      { _id: 't3', name: 'react' },
-      { _id: 't4', name: 'state-management' }
-    ],
-    author: {
-      _id: 'u2',
-      name: 'Jane Smith',
-      picture: 'https://randomuser.me/api/portraits/women/2.jpg'
-    },
-    upVotes: 15000,
-    views: 5000000,
-    answers: [
-      {
-        _id: 'a3',
-        text: 'React Query or Zustand are great lightweight options.'
-      },
-      {
-        _id: 'a4',
-        text: 'For complex apps, Redux Toolkit is still a strong choice.'
-      }
-    ],
-    createdAt: new Date('2025-02-15T15:30:00Z')
-  },
-  {
-    _id: 'q3',
-    title: 'How does TypeScript improve large-scale JavaScript projects?',
-    tags: [
-      { _id: 't5', name: 'typescript' },
-      { _id: 't6', name: 'javascript' }
-    ],
-    author: {
-      _id: 'u3',
-      name: 'Alex Johnson',
-      picture: 'https://randomuser.me/api/portraits/men/3.jpg'
-    },
-    upVotes: 3250,
-    views: 3450000000,
-    answers: [
-      {
-        _id: 'a5',
-        text: 'It provides static typing that helps catch bugs early.'
-      },
-      {
-        _id: 'a6',
-        text: 'It improves developer experience with IntelliSense and tooling.'
-      }
-    ],
-    createdAt: new Date('2024-07-10T08:45:00Z')
-  }
-];
+const Home = async () => {
+  const result = await getQuestions({});
 
-const Home = () => {
+  console.log(result.questions);
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -117,15 +40,15 @@ const Home = () => {
       <HomeFilters />
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {result.questions.length > 0 ? (
+          result.questions.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
               title={question.title}
               tags={question.tags}
               author={question.author}
-              upVotes={question.upVotes}
+              upvotes={question.upvotes}
               answers={question.answers}
               views={question.views}
               createdAt={question.createdAt}
