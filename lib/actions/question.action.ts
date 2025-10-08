@@ -8,7 +8,7 @@ import User from '@/database/user.model';
 
 export async function getQuestions(params: GetQuestionsParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const questions = await Question.find({})
       .populate({ path: 'tags', model: Tag })
