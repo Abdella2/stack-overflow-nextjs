@@ -1,15 +1,14 @@
-import { type Metadata } from 'next';
+import { ThemeProvider } from '@/context/ThemeProvider';
 import {
   ClerkProvider,
   SignInButton,
   SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton
+  SignedOut
 } from '@clerk/nextjs';
+import { type Metadata } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
+import '../styles/prism.css';
 import './globals.css';
-import { ThemeProvider } from '@/context/ThemeProvider';
 
 const inter = Inter({
   variable: '--font-inter',
