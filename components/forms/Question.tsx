@@ -23,6 +23,7 @@ import Image from 'next/image';
 import { createQuestion } from '@/lib/actions/question.action';
 import { Content } from 'next/font/google';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTheme } from '@/context/ThemeProvider';
 
 const type: any = 'create';
 
@@ -30,6 +31,7 @@ interface Props {
   mongoUserId: string;
 }
 const Question = ({ mongoUserId }: Props) => {
+  const { mode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
@@ -199,7 +201,9 @@ const Question = ({ mongoUserId }: Props) => {
                     //   respondWith.string(() =>
                     //     Promise.reject('See docs to implement AI Assistant')
                     //   ),
-                    uploadcare_public_key: '59eac4a3a4e78f24886e'
+                    uploadcare_public_key: '59eac4a3a4e78f24886e',
+                    skin: mode === 'dark' ? 'oxide-dark' : 'oxide',
+                    content_css: mode === 'dark' ? 'dark' : 'light'
                   }}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
