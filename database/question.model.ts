@@ -1,6 +1,4 @@
-import { Schema, models, model, Document } from 'mongoose';
-import { title } from 'process';
-import { string } from 'zod';
+import { Document, Schema, model, models } from 'mongoose';
 
 export interface IQuestion extends Document {
   title: string;
