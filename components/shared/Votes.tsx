@@ -1,5 +1,6 @@
 'use client';
 
+import { downvoteAnswer, upvoteAnswer } from '@/lib/actions/answer.action';
 import {
   downvoteQuestion,
   upvoteQuestion
@@ -8,7 +9,6 @@ import { toggleSaveQuestion } from '@/lib/actions/user.action';
 import { formatNumber } from '@/lib/utils';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import React from 'react';
 
 interface Props {
   type: string;
@@ -18,7 +18,7 @@ interface Props {
   hasupVoted: boolean;
   downvotes: number;
   hasdownVoted: boolean;
-  hasSaved: boolean;
+  hasSaved?: boolean;
 }
 
 const Votes = ({
@@ -52,6 +52,13 @@ const Votes = ({
           path
         });
       } else if (type === 'answer') {
+        await upvoteAnswer({
+          answerId: itemId,
+          userId,
+          hasupVoted,
+          hasdownVoted,
+          path
+        });
       }
 
       // TODO: show a toasty
@@ -68,6 +75,13 @@ const Votes = ({
           path
         });
       } else if (type === 'answer') {
+        await downvoteAnswer({
+          answerId: itemId,
+          userId,
+          hasupVoted,
+          hasdownVoted,
+          path
+        });
       }
 
       // TODO: show a toasty
@@ -118,18 +132,20 @@ const Votes = ({
           </div>
         </div>
       </div>
-      <Image
-        src={
-          hasSaved
-            ? '/assets/icons/star-filled.svg'
-            : '/assets/icons/star-red.svg'
-        }
-        alt="star"
-        width={18}
-        height={18}
-        className="cursor-pointer"
-        onClick={() => handleSave()}
-      />
+      {type === 'question' && (
+        <Image
+          src={
+            hasSaved
+              ? '/assets/icons/star-filled.svg'
+              : '/assets/icons/star-red.svg'
+          }
+          alt="star"
+          width={18}
+          height={18}
+          className="cursor-pointer"
+          onClick={() => handleSave()}
+        />
+      )}
     </div>
   );
 };
