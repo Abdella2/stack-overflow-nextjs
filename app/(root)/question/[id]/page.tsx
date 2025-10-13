@@ -1,4 +1,5 @@
 import Answer from '@/components/forms/Answer';
+import AllAnswers from '@/components/shared/AllAnswers';
 import Metric from '@/components/shared/Metric';
 import ParseHTML from '@/components/shared/ParseHTML';
 import RenderTag from '@/components/shared/RenderTag';
@@ -12,12 +13,15 @@ import React from 'react';
 
 const Page = async ({ params }) => {
   const result = await getQuestionById({ questionId: (await params).id });
+
   const { userId } = await auth();
 
   let mongoUser;
   if (userId) {
     mongoUser = await getUserById({ userId });
   }
+
+  console.log('server', mongoUser._id);
 
   return (
     <>
@@ -80,7 +84,15 @@ const Page = async ({ params }) => {
         ))}
       </div>
 
-      <Answer questionId={result._id} authorId={mongoUser._id} />
+      <AllAnswers
+        questionId={result._id}
+        totalAnswers={result.answers.length}
+      />
+
+      <Answer
+        questionId={JSON.stringify(result._id)}
+        authorId={JSON.stringify(mongoUser._id)}
+      />
     </>
   );
 };
