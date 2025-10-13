@@ -1,7 +1,12 @@
 'use client';
 
+import {
+  downvoteQuestion,
+  upvoteQuestion
+} from '@/lib/actions/question.action';
 import { formatNumber } from '@/lib/utils';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 interface Props {
@@ -15,10 +20,6 @@ interface Props {
   hasSaved: boolean;
 }
 
-const handleSave = () => {};
-
-const handleVote = (action: string) => {};
-
 const Votes = ({
   type,
   itemId,
@@ -29,6 +30,47 @@ const Votes = ({
   hasdownVoted,
   hasSaved
 }: Props) => {
+  const path = usePathname();
+  const handleSave = () => {};
+
+  const handleVote = async (action: string) => {
+    if (!userId) {
+      return;
+    }
+
+    if (action === 'upvote') {
+      if (type === 'question') {
+        await upvoteQuestion({
+          questionId: itemId,
+          userId,
+          hasupVoted,
+          hasdownVoted,
+          path
+        });
+      } else if (type === 'answer') {
+      }
+
+      // TODO: show a toasty
+      return;
+    }
+
+    if (action === 'downvote') {
+      if (type === 'question') {
+        await downvoteQuestion({
+          questionId: itemId,
+          userId,
+          hasupVoted,
+          hasdownVoted,
+          path
+        });
+      } else if (type === 'answer') {
+      }
+
+      // TODO: show a toasty
+      return;
+    }
+  };
+
   return (
     <div className="flex gap-5">
       <div className="flex-center 5 gap-2">
@@ -74,7 +116,7 @@ const Votes = ({
       </div>
       <Image
         src={
-          hasdownVoted
+          hasSaved
             ? '/assets/icons/star-filled.svg'
             : '/assets/icons/star-red.svg'
         }

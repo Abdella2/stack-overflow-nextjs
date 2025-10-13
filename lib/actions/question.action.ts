@@ -9,6 +9,7 @@ import {
   QuestionVoteParams
 } from './shared.types';
 import User from '@/database/user.model';
+import { revalidatePath } from 'next/cache';
 
 export async function getQuestions(params: GetQuestionsParams) {
   try {
@@ -84,7 +85,7 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
   try {
     await connectToDatabase();
 
-    const { questionId, userId, hasupVoted, hasdownVoted } = params;
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
     let updateQuery = {};
 
@@ -110,6 +111,8 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
     }
 
     // Increment author reputation
+
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
@@ -120,7 +123,7 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
   try {
     await connectToDatabase();
 
-    const { questionId, userId, hasupVoted, hasdownVoted } = params;
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
     let updateQuery = {};
 
@@ -146,6 +149,8 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     }
 
     // Increment author reputation
+
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
