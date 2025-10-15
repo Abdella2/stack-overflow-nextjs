@@ -41,3 +41,19 @@ export const formatNumber = (num: number): string => {
   }
   return num.toString();
 };
+
+/**
+ * Returns a formatted "Joined at Month Year" string for a given date.
+ * @param date - A JavaScript Date object
+ * @returns e.g. "Joined at October 2025"
+ */
+export const getJoinedAt = (date: Date): string => {
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    throw new Error('Invalid date provided');
+  }
+
+  const month = date.toLocaleString('default', { month: 'long' });
+  const year = date.getFullYear();
+
+  return `${month} ${year}`;
+};
