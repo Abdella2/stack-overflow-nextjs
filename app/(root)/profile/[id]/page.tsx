@@ -1,7 +1,9 @@
 import ProfileLink from '@/components/shared/ProfileLink';
+import Stats from '@/components/shared/Stats';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getUserInfo } from '@/lib/actions/user.action';
+import { getJoinedAt } from '@/lib/utils';
 import { URLProps } from '@/types';
 import { SignedIn } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
@@ -51,7 +53,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
 
               <ProfileLink
                 imgUrl="/assets/icons/calendar.svg"
-                title={userInfo.user.joinedAt.toString()}
+                title={getJoinedAt(userInfo.user.joinedAt)}
               />
             </div>
             {userInfo.user.bio && (
@@ -73,7 +75,12 @@ const Page = async ({ params, searchParams }: URLProps) => {
           </SignedIn>
         </div>
       </div>
-      Stats
+
+      <Stats
+        totalQuestions={userInfo.totalQuestions}
+        totalAnswers={userInfo.totalAnswers}
+      />
+
       <div className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-1">
           <TabsList className="background-light800_dark400 min-h-[42px] p-1">
