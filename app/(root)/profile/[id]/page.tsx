@@ -1,4 +1,5 @@
 import ProfileLink from '@/components/shared/ProfileLink';
+import QuestionsTab from '@/components/shared/QuestionsTab';
 import Stats from '@/components/shared/Stats';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,11 +10,15 @@ import { SignedIn } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import React from 'react';
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = await auth();
-  const userInfo = await getUserInfo({ userId: params.id });
+
+  if (!clerkId) redirect('/sign-in');
+
+  const userInfo = await getUserInfo({ userId: (await params).id });
 
   return (
     <>
@@ -87,7 +92,13 @@ const Page = async ({ params, searchParams }: URLProps) => {
             <TabsTrigger value="top-posts">Top Posts</TabsTrigger>
             <TabsTrigger value="answers">Answers</TabsTrigger>
           </TabsList>
-          <TabsContent value="top-posts">POSTS</TabsContent>
+          <TabsContent value="top-posts">
+            <QuestionsTab
+              userId={userInfo.user._id}
+              clerkId={clerkId}
+              searchParams={searchParams}
+            />
+          </TabsContent>
           <TabsContent value="answers">ANSWERS</TabsContent>
         </Tabs>
       </div>
