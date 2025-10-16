@@ -10,13 +10,17 @@ import QuestionCard from '@/components/shared/cards/QuestionCard';
 import { getQuestions } from '@/lib/actions/question.action';
 import { getSavedQuestions } from '@/lib/actions/user.action';
 import { auth } from '@clerk/nextjs/server';
+import { SearchParamsProps } from '@/types';
 
-const Home = async () => {
+const Home = async ({ searchParams }: SearchParamsProps) => {
   const { userId } = await auth();
 
   if (!userId) return null;
 
-  const result = await getSavedQuestions({ clerkId: userId });
+  const result = await getSavedQuestions({
+    searchQuery: searchParams.q,
+    clerkId: userId
+  });
 
   return (
     <>
