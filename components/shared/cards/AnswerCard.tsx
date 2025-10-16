@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { SignedIn } from '@clerk/nextjs';
 import { formatNumber, getTimestamp } from '@/lib/utils';
 import Metric from '../Metric';
+import EditDeleteAction from '../EditDeleteAction';
 
 interface Props {
   clerkId?: string | null;
@@ -44,6 +45,12 @@ const AnswerCard = ({
             {question.title}
           </h3>
         </div>
+
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteAction type="answer" itemId={_id.toString()} />
+          )}
+        </SignedIn>
       </div>
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
