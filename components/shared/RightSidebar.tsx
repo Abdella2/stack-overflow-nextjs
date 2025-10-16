@@ -2,26 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import RenderTag from './RenderTag';
-
-const topQuestions = [
-  { _id: '1', title: 'How to learn React in 2025 [Updated Guide]' },
-  {
-    _id: '2',
-    title: 'What is the best way to manage state in a React application?'
-  },
-  {
-    _id: '3',
-    title: 'How to optimize React performance for large-scale applications?'
-  },
-  {
-    _id: '4',
-    title: 'What are the new features in React 18 and how to use them?'
-  },
-  {
-    _id: '5',
-    title: 'How to handle forms and validation in React effectively?'
-  }
-];
+import { getHotQuestions } from '@/lib/actions/question.action';
 
 const popularTags = [
   { _id: '1', name: 'javascript', totalQuestions: 5 },
@@ -30,7 +11,8 @@ const popularTags = [
   { _id: '4', name: 'tailwind', totalQuestions: 2 },
   { _id: '5', name: 'css', totalQuestions: 4 }
 ];
-const RightSidebar = () => {
+const RightSidebar = async () => {
+  const topQuestions = await getHotQuestions();
   return (
     <section className="background-light900_dark200 light-border shadow-light-300 custom-scroll sticky top-0 right-0 flex h-screen w-[350px] flex-col overflow-y-auto border-r p-6 pt-36 max-xl:hidden dark:shadow-none">
       <div>
@@ -38,7 +20,7 @@ const RightSidebar = () => {
         <div className="mt-7 flex w-full flex-col gap-[30px]">
           {topQuestions.map((question) => (
             <Link
-              href={`/questions/${question._id}`}
+              href={`/question/${question._id}`}
               key={question._id}
               className="flex cursor-pointer items-center justify-between gap-7">
               <p className="body-medium text-dark500_light700">
