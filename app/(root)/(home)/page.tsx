@@ -11,7 +11,12 @@ import { getQuestions } from '@/lib/actions/question.action';
 import { SearchParamsProps } from '@/types';
 
 const Home = async ({ searchParams }: SearchParamsProps) => {
-  const result = await getQuestions({ searchQuery: searchParams.q });
+  const result = await getQuestions({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter
+  });
+
+  // Fetch recommended questions
 
   return (
     <>
