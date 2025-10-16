@@ -3,16 +3,11 @@ import Link from 'next/link';
 import React from 'react';
 import RenderTag from './RenderTag';
 import { getHotQuestions } from '@/lib/actions/question.action';
+import { getPopularTags } from '@/lib/actions/tag.action';
 
-const popularTags = [
-  { _id: '1', name: 'javascript', totalQuestions: 5 },
-  { _id: '2', name: 'next', totalQuestions: 3 },
-  { _id: '3', name: 'react', totalQuestions: 8 },
-  { _id: '4', name: 'tailwind', totalQuestions: 2 },
-  { _id: '5', name: 'css', totalQuestions: 4 }
-];
 const RightSidebar = async () => {
   const topQuestions = await getHotQuestions();
+  const popularTags = await getPopularTags();
   return (
     <section className="background-light900_dark200 light-border shadow-light-300 custom-scroll sticky top-0 right-0 flex h-screen w-[350px] flex-col overflow-y-auto border-r p-6 pt-36 max-xl:hidden dark:shadow-none">
       <div>
