@@ -34,7 +34,7 @@ export async function getAllTags(params: GetAllTagsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
 
     const query: FilterQuery<typeof Tag> = {};
 
@@ -42,11 +42,45 @@ export async function getAllTags(params: GetAllTagsParams) {
       query.$or = [{ name: { $regex: new RegExp(searchQuery, 'i') } }];
     }
 
-    const tags = await Tag.find(query);
+    let sortStage: Record<string, 1 | -1> = {};
+
+    switch (filter) {
+      case 'popular':
+        // ✅ sort by number of questions (descending)
+        sortStage = { questionsCount: -1 };
+        break;
+      case 'recent':
+        sortStage = { createdOn: -1 };
+        break;
+      case 'name':
+        sortStage = { name: 1 };
+        break;
+      case 'old':
+        sortStage = { createdOn: 1 };
+        break;
+      default:
+        break;
+    }
+
+    // ✅ use aggregation when sorting by computed field
+    const pipeline: any[] = [
+      { $match: query },
+      {
+        $addFields: {
+          questionsCount: { $size: { $ifNull: ['$questions', []] } }
+        }
+      },
+      { $sort: sortStage }
+    ];
+
+    const tags = await Tag.aggregate(pipeline).collation({
+      locale: 'en',
+      strength: 2
+    });
 
     return { tags };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 }
