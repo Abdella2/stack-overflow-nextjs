@@ -9,11 +9,13 @@ import NoResult from '@/components/shared/NoResult';
 import QuestionCard from '@/components/shared/cards/QuestionCard';
 import { getQuestions } from '@/lib/actions/question.action';
 import { SearchParamsProps } from '@/types';
+import Pagination from '@/components/shared/Pagination';
 
 const Home = async ({ searchParams }: SearchParamsProps) => {
+  const { q, filter, page } = await searchParams;
   const result = await getQuestions({
-    searchQuery: searchParams.q,
-    filter: searchParams.filter
+    searchQuery: q,
+    filter: filter
   });
 
   // Fetch recommended questions
@@ -67,6 +69,10 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
             linkTitle="Ask a Question"
           />
         )}
+      </div>
+
+      <div className="mt-10">
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
       </div>
     </>
   );
