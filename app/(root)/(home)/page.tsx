@@ -15,7 +15,8 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
   const { q, filter, page } = await searchParams;
   const result = await getQuestions({
     searchQuery: q,
-    filter: filter
+    filter: filter,
+    page: page ? +page : 1
   });
 
   // Fetch recommended questions
