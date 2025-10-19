@@ -34,7 +34,8 @@ export async function getAllTags(params: GetAllTagsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 20 } = params;
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Tag> = {};
 
@@ -59,6 +60,7 @@ export async function getAllTags(params: GetAllTagsParams) {
         sortStage = { createdOn: 1 };
         break;
       default:
+        sortStage = { createdAt: -1 };
         break;
     }
 
@@ -70,7 +72,9 @@ export async function getAllTags(params: GetAllTagsParams) {
           questionsCount: { $size: { $ifNull: ['$questions', []] } }
         }
       },
-      { $sort: sortStage }
+      { $sort: sortStage },
+      { $skip: skipAmount },
+      { $limit: pageSize }
     ];
 
     const tags = await Tag.aggregate(pipeline).collation({
@@ -78,7 +82,10 @@ export async function getAllTags(params: GetAllTagsParams) {
       strength: 2
     });
 
-    return { tags };
+    const totalTags = await Tag.countDocuments(query);
+    const totalPages = Math.ceil(totalTags / pageSize);
+
+    return { tags, totalPages };
   } catch (error) {
     console.error(error);
     throw error;
@@ -89,7 +96,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
   try {
     await connectToDatabase();
 
-    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
+    const { tagId, page = 1, pageSize = 20, searchQuery } = params;
+    const skipAmount = (page - 1) * pageSize;
 
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
     const query: FilterQuery<typeof Question> = searchQuery
@@ -101,7 +109,9 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
       model: Question,
       match: query,
       options: {
-        sort: { createdAt: -1 }
+        sort: { createdAt: -1 },
+        skip: skipAmount,
+        limit: pageSize + 1
       },
       populate: [
         { path: 'tags', model: Tag, select: '_id name' },
@@ -111,7 +121,9 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
     const questions = tag.questions;
 
-    return { tagTitle: tag.name, questions };
+    const isNext = tag.questions.length > pageSize;
+
+    return { tagTitle: tag.name, questions, isNext };
   } catch (error) {
     console.log(error);
     throw error;
